@@ -74,26 +74,30 @@ class InformationController extends Controller
         ]);
     }
 
-    // 게시글 수정 처리
-    public function update(Request $request, $id)
-    {
-        $information = Information::findOrFail($id);  // 수정할 게시글을 찾음
-
-        // 폼 데이터를 유효성 검사하고, 데이터를 업데이트
-        $validated = $request->validate([
-            'information_title' => 'required|string|max:255',
-            'information_kbn' => 'required|integer',
-            'keisai_ymd' => 'required|date_format:Ymd',
-            'enable_start_ymd' => 'required|date_format:Ymd',
-            'enable_end_ymd' => 'required|date_format:Ymd',
-            'information_naiyo' => 'required|string',
-            'create_user_cd' => 'required|string|max:10',
-        ]);
-
-        $information->update($validated);  // 유효성 검사된 데이터로 게시글 업데이트
-
-        return redirect()->route('information.index')->with('success', '게시물이 수정되었습니다.');
-    }
+        // PUT 요청 처리
+        public function update($id, Request $request)
+        {
+            // 해당 ID로 정보를 찾기
+            $information = Information::find($id);
+    
+            // 정보가 없다면 404 반환
+            if (!$information) {
+                return response()->json(['message' => 'Information not found'], 404);
+            }
+    
+            // 입력된 데이터로 정보 업데이트
+            $information->update([
+                'information_title' => $request->input('information_title'),
+                'information_kbn' => $request->input('information_kbn'),
+                'keisai_ymd' => $request->input('keisai_ymd'),
+                'enable_start_ymd' => $request->input('enable_start_ymd'),
+                'enable_end_ymd' => $request->input('enable_end_ymd'),
+                'information_naiyo' => $request->input('information_naiyo'),
+                'create_user_cd' => $request->input('create_user_cd'),
+            ]);
+    
+            return response()->json(['success' => true, 'message' => 'Updated successfully']);
+        }
 
     //선택삭제
     public function deleteSelected(Request $request)

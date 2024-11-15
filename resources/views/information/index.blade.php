@@ -94,8 +94,8 @@
             <label for="information_naiyo">お知らせ内容</label>
             <textarea id="information_naiyo_edit" name="information_naiyo" required></textarea><br>
 
-            <label for="create_user_cd">登録者コード</label>
-            <input type="text" id="create_user_cd_edit" name="create_user_cd" required><br>
+            <label for="update_user_cd">登録者コード</label>
+            <input type="text" id="update_user_cd_edit" name="update_user_cd" required><br>
 
             <!-- 버튼들을 감싸는 컨테이너 -->
             <div class="button-container">
@@ -126,10 +126,8 @@
         document.getElementById('information_naiyo').value = '';
         document.getElementById('create_user_cd').value = '';
     }
-
+    // 수정 모달 열기
     function openEditModal() {
-
-
         document.getElementById('editModal').style.display = 'flex';
     }
 
@@ -251,7 +249,7 @@
                     document.getElementById('enable_start_ymd_edit').value = data.enable_start_ymd;
                     document.getElementById('enable_end_ymd_edit').value = data.enable_end_ymd;
                     document.getElementById('information_naiyo_edit').value = data.information_naiyo;
-                    document.getElementById('create_user_cd_edit').value = data.create_user_cd;
+                    document.getElementById('update_user_cd_edit').value = data.update_user_cd;
 
                     // 모달 열기
                     openEditModal();
@@ -274,13 +272,13 @@
 
         // 폼 데이터를 가져와서 JSON 객체로 변환
         const jsonData = {
-            information_title: document.getElementById('information_title').value,
-            information_kbn: document.getElementById('information_kbn').value,
-            keisai_ymd: document.getElementById('keisai_ymd').value,
-            enable_start_ymd: document.getElementById('enable_start_ymd').value,
-            enable_end_ymd: document.getElementById('enable_end_ymd').value,
-            information_naiyo: document.getElementById('information_naiyo').value,
-            create_user_cd: document.getElementById('create_user_cd').value
+            information_title: document.getElementById('information_title_edit').value,
+            information_kbn: document.getElementById('information_kbn_edit').value,
+            keisai_ymd: document.getElementById('keisai_ymd_edit').value,
+            enable_start_ymd: document.getElementById('enable_start_ymd_edit').value,
+            enable_end_ymd: document.getElementById('enable_end_ymd_edit').value,
+            information_naiyo: document.getElementById('information_naiyo_edit').value,
+            create_user_cd: document.getElementById('update_user_cd_edit').value
         };
 
         // 수정 요청을 서버로 전송
@@ -353,46 +351,5 @@
             });
     }
 
-    function submitEditForm(event) {
-        event.preventDefault(); // 기본 폼 제출 방지
-
-        // createForm 폼에서 데이터를 가져와 FormData 객체 생성
-        const formElement = document.getElementById('createForm');
-        const formData = new FormData(formElement);
-
-        // FormData를 JSON 형식으로 변환하여 fetch에 전달
-        const jsonData = {};
-        formData.forEach((value, key) => {
-            jsonData[key] = value;
-        });
-
-        // 수정된 데이터를 서버로 전송
-        fetch(`/api/information/${selectedId}`, {
-                method: "PUT", // PUT 메서드를 사용하여 수정 요청
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(jsonData),
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("HTTP status " + response.status);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert('게시물이 성공적으로 수정되었습니다.');
-                    location.reload(); // 페이지 새로고침
-                } else {
-                    alert(data.message || '게시물 수정 실패');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('서버 오류가 발생했습니다.');
-            });
-    }
 </script>
 @endsection
