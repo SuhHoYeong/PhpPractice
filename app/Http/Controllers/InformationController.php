@@ -61,34 +61,38 @@ class InformationController extends Controller
         return view('information.show', compact('information'));
     }
 
-    // 게시글 수정 폼
+    // 게시글 수정 데이터를 JSON으로 반환하는 메서드
     public function edit($id)
     {
+        // ID에 해당하는 게시글 정보 가져오기
         $information = Information::findOrFail($id);
-        return view('information.edit', compact('information'));
+
+        // 데이터가 성공적으로 조회되면 JSON 형식으로 반환
+        return response()->json([
+            'success' => true,
+            'data' => $information,
+        ]);
     }
 
+    // 게시글 수정 처리
     public function update(Request $request, $id)
     {
-        // 데이터는 자동으로 JSON으로 파싱되어 객체로 접근 가능
-        $data = $request->all(); 
-    
-        // 게시물 찾기
-        $information = Information::findOrFail($id);
-    
-        // 게시물 수정
-        $information->update([
-            'information_title' => $data['information_title'],
-            'information_kbn' => $data['information_kbn'],
-            'keisai_ymd' => $data['keisai_ymd'],
-            'enable_start_ymd' => $data['enable_start_ymd'],
-            'enable_end_ymd' => $data['enable_end_ymd'],
-            'information_naiyo' => $data['information_naiyo'],
-            'create_user_cd' => $data['create_user_cd'],
+        $information = Information::findOrFail($id);  // 수정할 게시글을 찾음
+
+        // 폼 데이터를 유효성 검사하고, 데이터를 업데이트
+        $validated = $request->validate([
+            'information_title' => 'required|string|max:255',
+            'information_kbn' => 'required|integer',
+            'keisai_ymd' => 'required|date_format:Ymd',
+            'enable_start_ymd' => 'required|date_format:Ymd',
+            'enable_end_ymd' => 'required|date_format:Ymd',
+            'information_naiyo' => 'required|string',
+            'create_user_cd' => 'required|string|max:10',
         ]);
-    
-        // 응답 반환
-        return response()->json(['success' => true]);
+
+        $information->update($validated);  // 유효성 검사된 데이터로 게시글 업데이트
+
+        return redirect()->route('information.index')->with('success', '게시물이 수정되었습니다.');
     }
 
     //선택삭제
