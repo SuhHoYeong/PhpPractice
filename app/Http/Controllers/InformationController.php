@@ -145,7 +145,7 @@ class InformationController extends Controller
         $selectedId = $request->input('selected_items');
 
         if (!$selectedId) {
-            return response()->json(['success' => false, 'message' => '삭제할 게시물이 없습니다.']);
+            return response()->json(['success' => false, 'message' => '削除するコメントはありません']);
         }
 
         // 단일 게시물 삭제
@@ -155,7 +155,7 @@ class InformationController extends Controller
             return response()->json(['success' => true]);
         }
 
-        return response()->json(['success' => false, 'message' => '삭제에 실패했습니다.']);
+        return response()->json(['success' => false, 'message' => '削除失敗しました']);
     }
 
     // 게시글 삭제

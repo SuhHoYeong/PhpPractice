@@ -7,7 +7,7 @@
     <!-- 타이틀과 구분을 같은 줄에 배치 -->
     <div class="search-row">
         <label for="search_title" class="search-label">お知らせタイトル</label>
-        <input type="text" name="search_title" placeholder="제목 검색" value="{{ old('search_title', $search_title) }}">
+        <input type="text" name="search_title" placeholder="タイトル検索" value="{{ old('search_title', $search_title) }}">
 
         <label for="search_kbn" class="search-label">お知らせ区分</label>
         <select name="search_kbn">
@@ -19,17 +19,17 @@
 
     <!-- 게시일과 적용기간은 다른 줄에 배치 -->
     <div class="search-row">
-    <label for="search_keisai_ymd" class="search-label">掲載日</label>
-    <input type="date" id="search_keisai_ymd" name="search_keisai_ymd" 
-           value="{{ old('search_keisai_ymd', $search_keisai_ymd) }}" style="margin-left: 80px;">
+        <label for="search_keisai_ymd" class="search-label">掲載日</label>
+        <input type="date" id="search_keisai_ymd" name="search_keisai_ymd"
+            value="{{ old('search_keisai_ymd', $search_keisai_ymd) }}" style="margin-left: 80px;">
 
-    <label for="search_enable_period" class="search-label" >適用期間</label>
-    <input type="date" id="search_enable_start_ymd" name="search_enable_start_ymd" 
-           value="{{ old('search_enable_start_ymd', $search_enable_start_ymd) }}" style="margin-left: 30px;">
-    <span>～</span>
-    <input type="date" id="search_enable_end_ymd" name="search_enable_end_ymd" 
-           value="{{ old('search_enable_end_ymd', $search_enable_end_ymd) }}">
-</div>
+        <label for="search_enable_period" class="search-label">適用期間</label>
+        <input type="date" id="search_enable_start_ymd" name="search_enable_start_ymd"
+            value="{{ old('search_enable_start_ymd', $search_enable_start_ymd) }}" style="margin-left: 30px;">
+        <span>～</span>
+        <input type="date" id="search_enable_end_ymd" name="search_enable_end_ymd"
+            value="{{ old('search_enable_end_ymd', $search_enable_end_ymd) }}">
+    </div>
 
     <button type="submit">検索</button>
 </form>
@@ -39,39 +39,38 @@
 <div id="modal" class="modal">
     <div class="modal-content">
         <span class="close" onclick="closeModal()">&times;</span>
-        <h2>게시글 등록</h2>
+        <h2>お知らせの登録</h2>
 
         <!-- 등록 폼 (Ajax로 제출) -->
-        <form id="createForm" onsubmit="submitForm(event)">
+        <form id="createForm" onsubmit="submitForm(event)" lang="ja">
             @csrf
-            <label for="information_title">お知らせタイトル</label>
-            <input type="text" id="information_title" name="information_title" required><br>
+            <label id="label_information_title" for="information_title">お知らせタイトル</label>
+            <input type="text" id="information_title" name="information_title"><br>
 
-            <label for="information_kbn">お知らせ区分</label>
-            <select id="information_kbn" name="information_kbn" required>
+            <label id="label_information_kbn" for="information_kbn">お知らせ区分</label>
+            <select id="information_kbn" name="information_kbn">
                 <option value="1">重要</option>
                 <option value="2">情報</option>
             </select><br>
 
-            <label for="keisai_ymd">掲載日</label>
-            <input type="date" id="keisai_ymd" name="keisai_ymd" placeholder="YYYYMMDD" required><br>
+            <label id="label_keisai_ymd" for="keisai_ymd">掲載日</label>
+            <input type="date" id="keisai_ymd" name="keisai_ymd" placeholder="YYYYMMDD"><br>
 
-            <label for="enable_start_ymd">有効開始年月日</label>
-            <input type="date" id="enable_start_ymd" name="enable_start_ymd" placeholder="YYYYMMDD" required><br>
+            <label id="label_enable_start_ymd" for="enable_start_ymd">有効開始年月日</label>
+            <input type="date" id="enable_start_ymd" name="enable_start_ymd" placeholder="YYYYMMDD"><br>
 
-            <label for="enable_end_ymd">有効終了年月日</label>
-            <input type="date" id="enable_end_ymd" name="enable_end_ymd" placeholder="YYYYMMDD" required><br>
+            <label id="label_enable_end_ymd" for="enable_end_ymd">有効終了年月日</label>
+            <input type="date" id="enable_end_ymd" name="enable_end_ymd" placeholder="YYYYMMDD"><br>
 
-            <label for="information_naiyo">お知らせ内容</label>
-            <textarea id="information_naiyo" name="information_naiyo" required></textarea><br>
+            <label id="label_information_naiyo" for="information_naiyo">お知らせ内容</label>
+            <textarea id="information_naiyo" name="information_naiyo"></textarea><br>
 
-            <label for="create_user_cd">登録者コード</label>
-            <input type="text" id="create_user_cd" name="create_user_cd" required><br>
+            <label id="label_create_user_cd" for="create_user_cd">登録者コード</label>
+            <input type="text" id="create_user_cd" name="create_user_cd"><br>
 
             <!-- 버튼들을 감싸는 컨테이너 -->
             <div class="button-container">
                 <button type="submit" class="button">登録</button>
-                <!-- 뒤로가기 버튼 -->
                 <a href="{{ route('information.index') }}" class="button">戻る</a>
             </div>
         </form>
@@ -120,6 +119,47 @@
     </div>
 </div>
 
+<div id="alertModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAlertModal()">&times;</span>
+        <h2>警告</h2>
+        <p id="alertMessage">行を選択してください。</p>
+        <button class="button" onclick="closeAlertModal()">閉じる</button>
+    </div>
+</div>
+
+<!--登録完了モーダル-->
+<div id="successModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeSuccessModal()">&times;</span>
+        <h2>情報</h2>
+        <p id="alertMessageSuccess">お知らせの登録が完了しました。</p>
+        <button class="button" onclick="closeSuccessModal()" >閉じる</button>
+    </div>
+</div>
+
+<!--削除完了モーダル-->
+<div id="deleteModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeDeleteModal()">&times;</span>
+        <h2>情報</h2>
+        <p id="alertMessageDelete">お知らせの削除が完了しました。</p>
+        <button class="button" onclick="closeDeleteModal()">閉じる</button>
+    </div>
+</div>
+
+<!-- 삭제 확인 모달 -->
+<div id="deleteConfirmationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAlertModal1()">&times;</span>
+        <h2>削除確認</h2>
+        <p id="deleteConfirmationMessage">レコードを削除します。よろしいでしょうか。</p>
+        <div class="button-container">
+            <button id="confirmDeleteButton" class="button">削除</button>
+            <button class="button" onclick="closeAlertModal1()">キャンセル</button>
+        </div>
+    </div>
+</div>
 
 <script>
     // 모달 열기
@@ -150,7 +190,61 @@
         document.getElementById('editModal').style.display = 'none';
     }
 
-    
+    // 알림 모달 열기
+    function openAlertModal(message) {
+        document.getElementById('alertMessage').textContent = message; // 메시지를 동적으로 변경
+        document.getElementById('alertModal').style.display = 'flex';
+    }
+
+    // 알림 모달 닫기
+    function closeAlertModal() {
+        document.getElementById('alertModal').style.display = 'none';
+    }
+
+    // 모달 닫기 함수
+    function closeAlertModal1() {
+        document.getElementById('deleteConfirmationModal').style.display = 'none';
+    }
+
+        // 삭제 확인 모달을 열기 위한 함수
+        function openDeleteConfirmationModal() {
+        // 모달에 삭제 확인 메시지 표시
+        document.getElementById('deleteConfirmationMessage').innerText = "レコードを削除します。よろしいでしょうか。";
+        // 모달 열기
+        document.getElementById('deleteConfirmationModal').style.display = 'block';
+
+        // '削除' 버튼에 클릭 이벤트 추가
+        document.getElementById('confirmDeleteButton').addEventListener('click', function() {
+            deleteSelectedRecord(); // 삭제 함수 호출
+        });
+    }
+//성공하였습니다 모달 열기
+    function showSuccessModal() {
+    const modal = document.getElementById('successModal');
+    modal.style.display = 'block';
+}
+//성공하였습니다 모달 닫기
+function closeSuccessModal() {
+    location.reload()
+}
+
+//삭제성공하였습니다 모달 열기
+function showDeleteModal() {
+    const modal = document.getElementById('deleteModal');
+    modal.style.display = 'block';
+}
+//삭제성공하였습니다 모달 닫기
+function closeDeleteModal() {
+    location.reload()
+}
+
+    // 모달 외부를 클릭해도 닫히지 않도록 설정
+    window.onclick = function(event) {
+        const modal = document.getElementById('successModal');
+        if (event.target === modal) {
+            event.stopPropagation(); // 모달 외부 클릭을 차단
+        }
+    }
 </script>
 
 <div class="table-container">
@@ -223,61 +317,58 @@
 
         // 선택된 게시물이 없는 경우 알림 표시 후 함수 종료
         if (!selectedId) {
-            alert("行を選択してください。");
+            openAlertModal("行を選択してください。");
             return;
         }
 
-        // 삭제 확인 메시지
-        if (confirm("レコードを削除します。よろしいでしょうか。")) {
-            // 선택된 게시물 ID를 hidden input에 할당
-            document.getElementById('selected_items').value = selectedId;
+        // 삭제 확인 모달 열기
+        openDeleteConfirmationModal();
+    });
 
-            // 디버깅을 위한 콘솔 로그
-            console.log("서버로 전송되는 데이터: ", {
-                selected_items: selectedId
+
+    // 삭제 처리 함수
+    function deleteSelectedRecord() {
+        // 선택된 게시물 ID를 hidden input에 할당
+        document.getElementById('selected_items').value = selectedId;
+
+        // 서버에 삭제 요청 보내기
+        fetch("/api/information/deleteSelected", {
+                method: "DELETE",
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    selected_items: selectedId
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP status " + response.status); // 상태 오류 발생 시 오류 발생
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showDeleteModal();
+                    console.log('お知らせの削除が完了しました。');
+                } else {
+                    alert(data.message || '削除失敗');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('error');
             });
 
-            // 디버깅을 위한 URL 로그 출력
-            console.log("Delete URL:", "{{ route('information.deleteSelected') }}");
+        closeAlertModal1(); // 모달 닫기
+    }
 
-            // 서버에 삭제 요청 보내기
-            fetch("/api/information/deleteSelected", {
-                    method: "DELETE",
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        selected_items: selectedId
-                    })
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("HTTP status " + response.status); // 상태 오류 발생 시 오류 발생
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert('お知らせの削除が完了しました。');
-                        location.reload();
-                    } else {
-                        alert(data.message || '게시물 삭제 실패');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('서버 오류가 발생했습니다.');
-                });
-        } else {
-            console.log("삭제가 취소되었습니다.");
-        }
-    });
 
     // 수정 버튼 클릭 시 실행되는 메서드 (데이터 가져오기)
     function editSelectedRecord() {
         if (!selectedId) {
-            alert("行を選択してください");
+            openAlertModal("行を選択してください。");
             return;
         }
 
@@ -370,7 +461,62 @@
 
     function submitForm(event) {
         event.preventDefault(); // 기본 폼 제출 방지
+      // 필수 입력란 및 메시지 설정
+      const fields = [
+        { id: 'information_title', labelId: 'label_information_title', message: 'お知らせタイトルを入力してください。' },
+        { id: 'information_kbn', labelId: 'label_information_kbn', message: 'お知らせ区分を選択してください。' },
+        { id: 'keisai_ymd', labelId: 'label_keisai_ymd', message: '掲載日を入力してください。' },
+        { id: 'enable_start_ymd', labelId: 'label_enable_start_ymd', message: '有効開始年月日を入力してください。' },
+        { id: 'enable_end_ymd', labelId: 'label_enable_end_ymd', message: '有効終了年月日を入力してください。' },
+        { id: 'information_naiyo', labelId: 'label_information_naiyo', message: 'お知らせ内容を入力してください。' },
+        { id: 'create_user_cd', labelId: 'label_create_user_cd', message: '登録者コードを入力してください。' },
+    ];
 
+    let valid = true;
+
+    // 모든 에러 메시지 초기화
+    document.querySelectorAll('.error-message').forEach(errorMsg => errorMsg.remove());
+
+    fields.forEach(field => {
+        const input = document.getElementById(field.id);
+        const label = document.getElementById(field.labelId);
+
+        if (!input.value) {
+            valid = false;
+
+            // 에러 메시지를 라벨 옆에 추가
+            const errorMessage = document.createElement('span');
+            errorMessage.className = 'error-message';
+            errorMessage.style.color = 'red';
+            errorMessage.style.marginLeft = '10px'; // 라벨과 메시지 간 간격 추가
+            errorMessage.textContent = field.message;
+
+            // 라벨 옆에 에러 메시지 삽입
+            label.insertAdjacentElement('afterend', errorMessage);
+        }
+    });
+
+    // 유효개시일과 유효종료일 비교
+    const startDate = document.getElementById('enable_start_ymd').value;
+    const endDate = document.getElementById('enable_end_ymd').value;
+    const endLabel = document.getElementById('label_enable_end_ymd');
+
+    if (startDate && endDate && startDate > endDate) {
+        valid = false;
+
+        // 에러 메시지를 유효종료일 라벨 옆에 추가
+        const errorMessage = document.createElement('span');
+        errorMessage.className = 'error-message';
+        errorMessage.style.color = 'red';
+        errorMessage.style.marginLeft = '10px';
+        errorMessage.textContent = '有効開始年月日は有効終了年月日より前の日付を指定してください。';
+
+        endLabel.insertAdjacentElement('afterend', errorMessage);
+    }
+
+    if (!valid) {
+        return; // 유효성 검사를 통과하지 못하면 서버 요청 중단
+    }
         // createForm 폼에서 데이터를 가져와 FormData 객체 생성
         const formElement = document.getElementById('createForm');
         const formData = new FormData(formElement);
@@ -402,8 +548,8 @@
             })
             .then(data => {
                 if (data.success) {
-                    alert('게시물이 성공적으로 등록되었습니다.');
-                    location.reload(); // 페이지 새로고침
+                    showSuccessModal();
+                    // location.reload(); // 페이지 새로고침
                 } else {
                     alert(data.message || '게시물 등록 실패');
                 }
