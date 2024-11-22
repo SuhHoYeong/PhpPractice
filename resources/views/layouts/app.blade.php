@@ -109,7 +109,7 @@
         .button-inline {
             display: inline-block;
             /* 버튼을 한 줄로 배치 */
-            margin-right: 5px;
+            margin-right: 2px;
             /* 버튼 사이에 간격 추가 */
         }
 
@@ -236,6 +236,7 @@
     justify-content: center;
     margin: 0;  /* 여백 초기화 */
     padding: 0;  /* 여백 초기화 */
+    flex: 1;
 }
 
 /* 페이지 링크 간 간격을 조정 */
@@ -282,6 +283,16 @@
 ul{
     list-style-type:none;
 }
+
+.action-container {
+    display: flex;
+    justify-content: space-between; /* 페이지네이션과 버튼들이 양 끝에 배치되도록 설정 */
+    align-items: center; /* 세로 정렬을 가운데로 맞춤 */
+    gap: 10px; /* 요소들 사이에 간격을 추가 */
+    margin-left:50px;
+    margin-right:50px;
+}
+
     </style>
 </head>
 

@@ -175,23 +175,24 @@
     @endforeach
 
 </div>
-<div class="pagination">
-    {{ $informations->appends(request()->query())->links('pagination::bootstrap-4') }}
+<div class="action-container">
+    <div class="pagination">
+        {{ $informations->appends(request()->query())->links('pagination::bootstrap-4') }}
+    </div>
+
+    <button class="button button-inline" onclick="openModal()">登録</button>
+
+    <!-- 선택된 게시물 수정 버튼 -->
+    <button class="button button-inline" id="editSelectedButton" onclick="editSelectedRecord()">変更</button>
+
+    <!-- 선택된 게시물 삭제 버튼 -->
+    <form id="deleteSelectedForm" action="/api/information/deleteSelected" method="POST" class="button-inline">
+        @csrf
+        @method('DELETE')
+        <input type="hidden" name="selected_items" id="selected_items" value="">
+        <button class="button" type="submit" id="deleteSelectedButton">削除</button>
+    </form>
 </div>
-
-
-<button class="button button-inline" onclick="openModal()">登録</button>
-
-<!-- 선택된 게시물 수정 버튼 -->
-<button class="button button-inline" id="editSelectedButton" onclick="editSelectedRecord()">変更</button>
-
-<!-- 선택된 게시물 삭제 버튼 -->
-<form id="deleteSelectedForm" action="/api/information/deleteSelected" method="POST" class="button-inline">
-    @csrf
-    @method('DELETE')
-    <input type="hidden" name="selected_items" id="selected_items" value="">
-    <button class="button" type="submit" id="deleteSelectedButton">削除</button>
-</form>
 
 <script>
     let selectedId = null; // 선택된 게시물 ID를 저장할 변수
