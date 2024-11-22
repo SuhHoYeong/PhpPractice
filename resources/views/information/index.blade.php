@@ -1,25 +1,39 @@
 @extends('layouts.app')
 
 @section('content')
-<h1>게시글 목록</h1>
 
-<form action="{{ route('information.index') }}" method="GET">
-    <input type="text" name="search" placeholder="제목 검색" value="{{ old('search', $search) }}">
-    <button type="submit">검색</button>
+
+<form class="search-form" action="{{ route('information.index') }}" method="GET" style="margin-left: 60px; margin-right: 60px;">
+    <!-- 타이틀과 구분을 같은 줄에 배치 -->
+    <div class="search-row">
+        <label for="search_title" class="search-label">お知らせタイトル</label>
+        <input type="text" name="search_title" placeholder="제목 검색" value="{{ old('search_title', $search_title) }}">
+
+        <label for="search_kbn" class="search-label">お知らせ区分</label>
+        <select name="search_kbn">
+            <option value="">全て</option>
+            <option value="1" {{ old('search_kbn', $search_kbn) == '1' ? 'selected' : '' }}>重要</option>
+            <option value="2" {{ old('search_kbn', $search_kbn) == '2' ? 'selected' : '' }}>情報</option>
+        </select>
+    </div>
+
+    <!-- 게시일과 적용기간은 다른 줄에 배치 -->
+    <div class="search-row">
+    <label for="search_keisai_ymd" class="search-label">掲載日</label>
+    <input type="date" id="search_keisai_ymd" name="search_keisai_ymd" 
+           value="{{ old('search_keisai_ymd', $search_keisai_ymd) }}" style="margin-left: 80px;">
+
+    <label for="search_enable_period" class="search-label" >適用期間</label>
+    <input type="date" id="search_enable_start_ymd" name="search_enable_start_ymd" 
+           value="{{ old('search_enable_start_ymd', $search_enable_start_ymd) }}" style="margin-left: 30px;">
+    <span>～</span>
+    <input type="date" id="search_enable_end_ymd" name="search_enable_end_ymd" 
+           value="{{ old('search_enable_end_ymd', $search_enable_end_ymd) }}">
+</div>
+
+    <button type="submit">検索</button>
 </form>
 
-<!-- 선택된 게시물 삭제 버튼 -->
-<form id="deleteSelectedForm" action="/api/information/deleteSelected" method="POST">
-    @csrf
-    @method('DELETE')
-    <input type="hidden" name="selected_items" id="selected_items" value="">
-    <button type="submit" id="deleteSelectedButton">선택된 게시물 삭제</button>
-</form>
-
-<button class="button" onclick="openModal()">새 게시글 등록</button>
-
-<!-- 선택된 게시물 수정 버튼 -->
-<button type="button" id="editSelectedButton" onclick="editSelectedRecord()">선택된 게시물 수정</button>
 
 <!--登録モーダル-->
 <div id="modal" class="modal">
@@ -40,13 +54,13 @@
             </select><br>
 
             <label for="keisai_ymd">掲載日</label>
-            <input type="text" id="keisai_ymd" name="keisai_ymd" placeholder="YYYYMMDD" required><br>
+            <input type="date" id="keisai_ymd" name="keisai_ymd" placeholder="YYYYMMDD" required><br>
 
             <label for="enable_start_ymd">有効開始年月日</label>
-            <input type="text" id="enable_start_ymd" name="enable_start_ymd" placeholder="YYYYMMDD" required><br>
+            <input type="date" id="enable_start_ymd" name="enable_start_ymd" placeholder="YYYYMMDD" required><br>
 
             <label for="enable_end_ymd">有効終了年月日</label>
-            <input type="text" id="enable_end_ymd" name="enable_end_ymd" placeholder="YYYYMMDD" required><br>
+            <input type="date" id="enable_end_ymd" name="enable_end_ymd" placeholder="YYYYMMDD" required><br>
 
             <label for="information_naiyo">お知らせ内容</label>
             <textarea id="information_naiyo" name="information_naiyo" required></textarea><br>
@@ -83,13 +97,13 @@
             </select><br>
 
             <label for="keisai_ymd">掲載日</label>
-            <input type="text" id="keisai_ymd_edit" name="keisai_ymd" placeholder="YYYYMMDD" required><br>
+            <input type="date" id="keisai_ymd_edit" name="keisai_ymd" required><br>
 
             <label for="enable_start_ymd">有効開始年月日</label>
-            <input type="text" id="enable_start_ymd_edit" name="enable_start_ymd" placeholder="YYYYMMDD" required><br>
+            <input type="date" id="enable_start_ymd_edit" name="enable_start_ymd" required><br>
 
             <label for="enable_end_ymd">有効終了年月日</label>
-            <input type="text" id="enable_end_ymd_edit" name="enable_end_ymd" placeholder="YYYYMMDD" required><br>
+            <input type="date" id="enable_end_ymd_edit" name="enable_end_ymd" required><br>
 
             <label for="information_naiyo">お知らせ内容</label>
             <textarea id="information_naiyo_edit" name="information_naiyo" required></textarea><br>
@@ -100,7 +114,7 @@
             <!-- 버튼들을 감싸는 컨테이너 -->
             <div class="button-container">
                 <button type="submit" class="button">変更</button> <!-- 버튼을 "변경"으로 수정 -->
-                <button type="button" class="button" onclick="closeEditModal()">닫기</button>
+                <button type="button" class="button" onclick="closeEditModal()">戻る</button>
             </div>
         </form>
     </div>
@@ -135,25 +149,58 @@
     function closeEditModal() {
         document.getElementById('editModal').style.display = 'none';
     }
+
+    
 </script>
-@foreach ($informations as $information)
-<div>
-    <h2>{{ $information->information_title }}</h2>
-    <p>{{ $information->information_naiyo }}</p>
-    <a href="{{ route('information.show', $information->information_id) }}">상세보기</a>
-    <!-- 선택 버튼 -->
-    <button type="button" class="select-button" data-id="{{ $information->information_id }}">선택</button>
+
+<div class="table-container">
+    <div class="table-header">
+        <span class="table-cell">お知らせタイトル</span>
+        <span class="table-cell">お知らせ区分</span>
+        <span class="table-cell">掲載日</span>
+        <span class="table-cell">適用期間</span>
+    </div>
+
+    <!-- 데이터 행 출력 -->
+    @foreach ($informations as $information)
+    <div class="table-row" data-id="{{ $information->information_id }}">
+        <span class="table-cell">{{ $information->information_title }}</span>
+        <span class="table-cell">{{ $information->information_kbn == 1 ? '重要' : '情報' }}</span>
+        <span class="table-cell">{{ \Carbon\Carbon::parse($information->keisai_ymd)->format('Y/m/d') }}</span>
+        <span class="table-cell">
+            {{ \Carbon\Carbon::parse($information->enable_start_ymd)->format('Y/m/d') }} ~
+            {{ \Carbon\Carbon::parse($information->enable_end_ymd)->format('Y/m/d') }}
+        </span>
+    </div>
+    @endforeach
+
 </div>
-@endforeach
+<div class="pagination">
+    {{ $informations->appends(request()->query())->links('pagination::bootstrap-4') }}
+</div>
+
+
+<button class="button button-inline" onclick="openModal()">登録</button>
+
+<!-- 선택된 게시물 수정 버튼 -->
+<button class="button button-inline" id="editSelectedButton" onclick="editSelectedRecord()">変更</button>
+
+<!-- 선택된 게시물 삭제 버튼 -->
+<form id="deleteSelectedForm" action="/api/information/deleteSelected" method="POST" class="button-inline">
+    @csrf
+    @method('DELETE')
+    <input type="hidden" name="selected_items" id="selected_items" value="">
+    <button class="button" type="submit" id="deleteSelectedButton">削除</button>
+</form>
 
 <script>
     let selectedId = null; // 선택된 게시물 ID를 저장할 변수
 
     // 게시물 선택 버튼 클릭 시
-    document.querySelectorAll('.select-button').forEach(button => {
+    document.querySelectorAll('.table-row').forEach(button => {
         button.addEventListener('click', function() {
             // 모든 선택 버튼에서 'selected' 클래스 제거
-            document.querySelectorAll('.select-button').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.table-row').forEach(btn => btn.classList.remove('selected'));
 
             // 현재 선택된 게시물 ID 업데이트 및 선택 표시
             selectedId = this.getAttribute('data-id');
@@ -175,12 +222,12 @@
 
         // 선택된 게시물이 없는 경우 알림 표시 후 함수 종료
         if (!selectedId) {
-            alert("선택된 게시물이 없습니다.");
+            alert("行を選択してください。");
             return;
         }
 
         // 삭제 확인 메시지
-        if (confirm("선택된 게시물을 삭제하시겠습니까?")) {
+        if (confirm("レコードを削除します。よろしいでしょうか。")) {
             // 선택된 게시물 ID를 hidden input에 할당
             document.getElementById('selected_items').value = selectedId;
 
@@ -211,7 +258,7 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        alert('선택된 게시물이 삭제되었습니다.');
+                        alert('お知らせの削除が完了しました。');
                         location.reload();
                     } else {
                         alert(data.message || '게시물 삭제 실패');
@@ -229,7 +276,7 @@
     // 수정 버튼 클릭 시 실행되는 메서드 (데이터 가져오기)
     function editSelectedRecord() {
         if (!selectedId) {
-            alert("수정할 게시물을 선택하세요.");
+            alert("行を選択してください");
             return;
         }
 
@@ -241,13 +288,19 @@
 
                     data = data.data;
 
+
+                    // YYYYMMDD 형태의 문자열을 YYYY-MM-DD로 변환하는 함수
+                    function formatDateString(dateString) {
+                        return dateString.substring(0, 4) + '-' + dateString.substring(4, 6) + '-' + dateString.substring(6, 8);
+                    }
                     // 폼에 데이터 채우기
                     console.log(data)
                     document.getElementById('information_title_edit').value = data.information_title;
                     document.getElementById('information_kbn_edit').value = data.information_kbn;
-                    document.getElementById('keisai_ymd_edit').value = data.keisai_ymd;
-                    document.getElementById('enable_start_ymd_edit').value = data.enable_start_ymd;
-                    document.getElementById('enable_end_ymd_edit').value = data.enable_end_ymd;
+                    // 수정 모달을 열 때 데이터 설정
+                    document.getElementById('keisai_ymd_edit').value = formatDateString(data.keisai_ymd);
+                    document.getElementById('enable_start_ymd_edit').value = formatDateString(data.enable_start_ymd);
+                    document.getElementById('enable_end_ymd_edit').value = formatDateString(data.enable_end_ymd);
                     document.getElementById('information_naiyo_edit').value = data.information_naiyo;
                     document.getElementById('update_user_cd_edit').value = data.update_user_cd;
 
@@ -266,6 +319,10 @@
             });
     }
 
+    // YYYY-MM-DD 형태의 문자열을 YYYYMMDD로 변환하는 함수
+    function formatDateToServer(dateString) {
+        return dateString.replace(/-/g, '');
+    }
     // 수정된 데이터를 전송하는 메서드
     function submitEditForm(event) {
         event.preventDefault(); // 폼 기본 제출 방지
@@ -274,9 +331,9 @@
         const jsonData = {
             information_title: document.getElementById('information_title_edit').value,
             information_kbn: document.getElementById('information_kbn_edit').value,
-            keisai_ymd: document.getElementById('keisai_ymd_edit').value,
-            enable_start_ymd: document.getElementById('enable_start_ymd_edit').value,
-            enable_end_ymd: document.getElementById('enable_end_ymd_edit').value,
+            keisai_ymd: formatDateToServer(document.getElementById('keisai_ymd_edit').value),
+            enable_start_ymd: formatDateToServer(document.getElementById('enable_start_ymd_edit').value),
+            enable_end_ymd: formatDateToServer(document.getElementById('enable_end_ymd_edit').value),
             information_naiyo: document.getElementById('information_naiyo_edit').value,
             create_user_cd: document.getElementById('update_user_cd_edit').value
         };
@@ -320,6 +377,11 @@
         // FormData를 JSON 형식으로 변환하여 fetch에 전달
         const jsonData = {};
         formData.forEach((value, key) => {
+            // 날짜 필드 확인 후 포맷 변환
+            if (key === 'keisai_ymd' || key === 'enable_start_ymd' || key === 'enable_end_ymd') {
+                // 날짜 값에서 "-" 제거하여 YYYYMMDD 형식으로 변환
+                value = value.replace(/-/g, ''); // 예: "2024-11-15" -> "20241115"
+            }
             jsonData[key] = value;
         });
 
@@ -350,6 +412,5 @@
                 alert('서버 오류가 발생했습니다.');
             });
     }
-
 </script>
 @endsection
