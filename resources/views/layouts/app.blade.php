@@ -684,7 +684,83 @@
     #deleteModal .button:hover {
         background-color: #218838; /* 버튼 호버 색상 */
     }
+   
     
+
+
+
+
+
+
+
+                /* 성공 모달 배경 */
+                #updateModal {
+        display: none; /* 기본적으로 숨김 */
+        position: fixed;
+        z-index: 1000; /* 다른 요소 위에 표시 */
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4); /* 반투명 배경 */
+        overflow: auto; /* 콘텐츠가 모달 크기를 넘으면 스크롤 */
+    }
+
+    /* 성공 모달 콘텐츠 */
+    #updateModal .modal-content {
+        background-color: #fff;
+        margin: 10% auto; /* 화면에서 10% 아래로 위치 */
+        padding: 20px;
+        border-radius: 8px;
+        width: 80%; /* 모달 너비 */
+        max-width: 500px; /* 최대 너비 */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+        text-align: center; /* 텍스트 중앙 정렬 */
+    }
+
+    /* 성공 모달 닫기 버튼 */
+    #updateModal .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    #updateModal .close:hover,
+    #updateModal .close:focus {
+        color: black;
+        text-decoration: none;
+    }
+
+    /* 성공 모달 제목 */
+    #updateModal h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: #28a745; /* 성공적인 색상 (초록) */
+    }
+
+    /* 성공 모달 메시지 */
+    #updateModal p {
+        font-size: 18px;
+        color: #333; /* 본문 색상 */
+        margin-bottom: 30px;
+    }
+
+    /* 성공 모달 버튼 */
+    #updateModal .button {
+        background-color: #007bff; /* 성공적인 색상 */
+        color: #fff;
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #updateModal .button:hover {
+        background-color: #218838; /* 버튼 호버 색상 */
+    }
     </style>
 </head>
 

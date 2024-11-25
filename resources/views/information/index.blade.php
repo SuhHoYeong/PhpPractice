@@ -86,29 +86,51 @@
         <!-- 수정 폼 (Ajax로 제출) -->
         <form id="editForm" onsubmit="submitEditForm(event)">
             @csrf
-            <label for="information_title">お知らせタイトル</label>
-            <input type="text" id="information_title_edit" name="information_title" required><br>
 
-            <label for="information_kbn">お知らせ区分</label>
-            <select id="information_kbn_edit" name="information_kbn" required>
+            <!-- お知らせタイトル -->
+            <label for="information_title_edit" id="label_information_title_edit">お知らせタイトル</label>
+            <input type="text" id="information_title_edit" name="information_title"><br>
+            <!-- 필수 입력란 에러 메시지 -->
+            <span class="error-message" id="error_information_title_edit" style="color:red;display:none;">お知らせタイトルを入力してください。</span>
+
+            <!-- お知らせ区分 -->
+            <label for="information_kbn_edit" id="label_information_kbn_edit">お知らせ区分</label>
+            <select id="information_kbn_edit" name="information_kbn">
                 <option value="1">重要</option>
                 <option value="2">情報</option>
             </select><br>
+            <!-- 필수 입력란 에러 메시지 -->
+            <span class="error-message" id="error_information_kbn_edit" style="color:red;display:none;">お知らせ区分を選択してください。</span>
 
-            <label for="keisai_ymd">掲載日</label>
-            <input type="date" id="keisai_ymd_edit" name="keisai_ymd" required><br>
+            <!-- 掲載日 -->
+            <label for="keisai_ymd_edit" id="label_keisai_ymd_edit">掲載日</label>
+            <input type="date" id="keisai_ymd_edit" name="keisai_ymd"><br>
+            <!-- 필수 입력란 에러 메시지 -->
+            <span class="error-message" id="error_keisai_ymd_edit" style="color:red;display:none;">掲載日を入力してください。</span>
 
-            <label for="enable_start_ymd">有効開始年月日</label>
-            <input type="date" id="enable_start_ymd_edit" name="enable_start_ymd" required><br>
+            <!-- 有効開始年月日 -->
+            <label for="enable_start_ymd_edit" id="label_enable_start_ymd_edit">有効開始年月日</label>
+            <input type="date" id="enable_start_ymd_edit" name="enable_start_ymd"><br>
+            <!-- 필수 입력란 에러 메시지 -->
+            <span class="error-message" id="error_enable_start_ymd_edit" style="color:red;display:none;">有効開始年月日を入力してください。</span>
 
-            <label for="enable_end_ymd">有効終了年月日</label>
-            <input type="date" id="enable_end_ymd_edit" name="enable_end_ymd" required><br>
+            <!-- 有効終了年月日 -->
+            <label for="enable_end_ymd_edit" id="label_enable_end_ymd_edit">有効終了年月日</label>
+            <input type="date" id="enable_end_ymd_edit" name="enable_end_ymd"><br>
+            <!-- 필수 입력란 에러 메시지 -->
+            <span class="error-message" id="error_enable_end_ymd_edit" style="color:red;display:none;">有効終了年月日を入力してください。</span>
 
-            <label for="information_naiyo">お知らせ内容</label>
-            <textarea id="information_naiyo_edit" name="information_naiyo" required></textarea><br>
+            <!-- お知らせ内容 -->
+            <label for="information_naiyo_edit" id="label_information_naiyo_edit">お知らせ内容</label>
+            <textarea id="information_naiyo_edit" name="information_naiyo"></textarea><br>
+            <!-- 필수 입력란 에러 메시지 -->
+            <span class="error-message" id="error_information_naiyo_edit" style="color:red;display:none;">お知らせ内容を入力してください。</span>
 
-            <label for="update_user_cd">登録者コード</label>
-            <input type="text" id="update_user_cd_edit" name="update_user_cd" required><br>
+            <!-- 登録者コード -->
+            <label for="update_user_cd_edit" id="label_update_user_cd_edit">登録者コード</label>
+            <input type="text" id="update_user_cd_edit" name="update_user_cd"><br>
+            <!-- 필수 입력란 에러 메시지 -->
+            <span class="error-message" id="error_update_user_cd_edit" style="color:red;display:none;">登録者コードを入力してください。</span>
 
             <!-- 버튼들을 감싸는 컨테이너 -->
             <div class="button-container">
@@ -134,7 +156,7 @@
         <span class="close" onclick="closeSuccessModal()">&times;</span>
         <h2>情報</h2>
         <p id="alertMessageSuccess">お知らせの登録が完了しました。</p>
-        <button class="button" onclick="closeSuccessModal()" >閉じる</button>
+        <button class="button" onclick="closeSuccessModal()">閉じる</button>
     </div>
 </div>
 
@@ -145,6 +167,16 @@
         <h2>情報</h2>
         <p id="alertMessageDelete">お知らせの削除が完了しました。</p>
         <button class="button" onclick="closeDeleteModal()">閉じる</button>
+    </div>
+</div>
+
+<!--変更完了モーダル-->
+<div id="updateModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeUpdateModal()">&times;</span>
+        <h2>情報</h2>
+        <p id="alertMessageUpdate">お知らせの変更が完了しました。</p>
+        <button class="button" onclick="closeUpdateModal()">閉じる</button>
     </div>
 </div>
 
@@ -206,8 +238,8 @@
         document.getElementById('deleteConfirmationModal').style.display = 'none';
     }
 
-        // 삭제 확인 모달을 열기 위한 함수
-        function openDeleteConfirmationModal() {
+    // 삭제 확인 모달을 열기 위한 함수
+    function openDeleteConfirmationModal() {
         // 모달에 삭제 확인 메시지 표시
         document.getElementById('deleteConfirmationMessage').innerText = "レコードを削除します。よろしいでしょうか。";
         // 모달 열기
@@ -218,25 +250,26 @@
             deleteSelectedRecord(); // 삭제 함수 호출
         });
     }
-//성공하였습니다 모달 열기
+    //성공하였습니다 모달 열기
     function showSuccessModal() {
-    const modal = document.getElementById('successModal');
-    modal.style.display = 'block';
-}
-//성공하였습니다 모달 닫기
-function closeSuccessModal() {
-    location.reload()
-}
+        const modal = document.getElementById('successModal');
+        modal.style.display = 'block';
+    }
+    //성공하였습니다 모달 닫기
+    function closeSuccessModal() {
+        location.reload()
+    }
 
-//삭제성공하였습니다 모달 열기
-function showDeleteModal() {
-    const modal = document.getElementById('deleteModal');
-    modal.style.display = 'block';
-}
-//삭제성공하였습니다 모달 닫기
-function closeDeleteModal() {
-    location.reload()
-}
+    //삭제성공하였습니다 모달 열기
+    function showDeleteModal() {
+        const modal = document.getElementById('deleteModal');
+        modal.style.display = 'block';
+    }
+    //삭제성공하였습니다 모달 닫기
+    function closeDeleteModal() {
+        location.reload()
+    }
+
 
     // 모달 외부를 클릭해도 닫히지 않도록 설정
     window.onclick = function(event) {
@@ -244,6 +277,17 @@ function closeDeleteModal() {
         if (event.target === modal) {
             event.stopPropagation(); // 모달 외부 클릭을 차단
         }
+    }
+
+    //변경성공하였습니다 모달 열기
+    function showUpdateModal() {
+        const modal = document.getElementById('updateModal');
+        modal.style.display = 'block';
+    }
+
+    //삭제성공하였습니다 모달 닫기
+    function closeUpdateModal() {
+        location.reload()
     }
 </script>
 
@@ -419,6 +463,116 @@ function closeDeleteModal() {
     function submitEditForm(event) {
         event.preventDefault(); // 폼 기본 제출 방지
 
+        // 필수 입력란 및 메시지 설정
+        const fields = [{
+                id: 'information_title_edit',
+                labelId: 'label_information_title_edit',
+                message: 'お知らせタイトルを入力してください。'
+            },
+            {
+                id: 'information_kbn_edit',
+                labelId: 'label_information_kbn_edit',
+                message: 'お知らせ区分を選択してください。'
+            },
+            {
+                id: 'keisai_ymd_edit',
+                labelId: 'label_keisai_ymd_edit',
+                message: '掲載日を入力してください。'
+            },
+            {
+                id: 'enable_start_ymd_edit',
+                labelId: 'label_enable_start_ymd_edit',
+                message: '有効開始年月日を入力してください。'
+            },
+            {
+                id: 'enable_end_ymd_edit',
+                labelId: 'label_enable_end_ymd_edit',
+                message: '有効終了年月日を入力してください。'
+            },
+            {
+                id: 'information_naiyo_edit',
+                labelId: 'label_information_naiyo_edit',
+                message: 'お知らせ内容を入力してください。'
+            },
+            {
+                id: 'update_user_cd_edit',
+                labelId: 'label_update_user_cd_edit',
+                message: '登録者コードを入力してください。'
+            },
+        ];
+
+        let valid = true;
+
+        // 모든 에러 메시지 초기화
+        document.querySelectorAll('.error-message').forEach(errorMsg => errorMsg.remove());
+
+        // 각 필드에 대해 유효성 검사
+        fields.forEach(field => {
+            const input = document.getElementById(field.id);
+            const label = document.getElementById(field.labelId);
+
+            if (!input.value) {
+                valid = false;
+
+                // 에러 메시지를 라벨 옆에 추가
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'error-message';
+                errorMessage.style.color = 'red';
+                errorMessage.style.marginLeft = '10px'; // 라벨과 메시지 간 간격 추가
+                errorMessage.textContent = field.message;
+
+                // 라벨 옆에 에러 메시지 삽입
+                label.insertAdjacentElement('afterend', errorMessage);
+            }
+
+            // 타이틀이 100자 초과하는지 체크
+            if (field.id === 'information_title_edit' && input.value.length > 100) {
+                valid = false;
+
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'error-message';
+                errorMessage.style.color = 'red';
+                errorMessage.style.marginLeft = '10px';
+                errorMessage.textContent = 'タイトルは100文字以内で入力してください。';
+                label.insertAdjacentElement('afterend', errorMessage);
+            }
+
+            // 등록자 코드가 40자 초과하는지 체크
+            if (field.id === 'update_user_cd_edit' && input.value.length > 40) {
+                valid = false;
+
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'error-message';
+                errorMessage.style.color = 'red';
+                errorMessage.style.marginLeft = '10px';
+                errorMessage.textContent = '登録者コードは40文字以内で入力してください。';
+                label.insertAdjacentElement('afterend', errorMessage);
+            }
+
+        });
+
+        // 유효개시일과 유효종료일 비교
+        const startDate = document.getElementById('enable_start_ymd_edit').value;
+        const endDate = document.getElementById('enable_end_ymd_edit').value;
+        const endLabel = document.getElementById('label_enable_end_ymd_edit');
+
+        if (startDate && endDate && startDate > endDate) {
+            valid = false;
+
+            // 에러 메시지를 유효종료일 라벨 옆에 추가
+            const errorMessage = document.createElement('span');
+            errorMessage.className = 'error-message';
+            errorMessage.style.color = 'red';
+            errorMessage.style.marginLeft = '10px';
+            errorMessage.textContent = '有効開始年月日は有効終了年月日より前の日付を指定してください。';
+
+            endLabel.insertAdjacentElement('afterend', errorMessage);
+        }
+
+        if (!valid) {
+            return; // 유효성 검사를 통과하지 못하면 서버 요청 중단
+        }
+
         // 폼 데이터를 가져와서 JSON 객체로 변환
         const jsonData = {
             information_title: document.getElementById('information_title_edit').value,
@@ -447,8 +601,7 @@ function closeDeleteModal() {
             })
             .then(data => {
                 if (data.success) {
-                    alert('게시물이 성공적으로 수정되었습니다.');
-                    location.reload(); // 페이지 새로고침
+                    showUpdateModal('게시물이 성공적으로 수정되었습니다.');
                 } else {
                     alert(data.message || '게시물 수정 실패');
                 }
@@ -461,62 +614,119 @@ function closeDeleteModal() {
 
     function submitForm(event) {
         event.preventDefault(); // 기본 폼 제출 방지
-      // 필수 입력란 및 메시지 설정
-      const fields = [
-        { id: 'information_title', labelId: 'label_information_title', message: 'お知らせタイトルを入力してください。' },
-        { id: 'information_kbn', labelId: 'label_information_kbn', message: 'お知らせ区分を選択してください。' },
-        { id: 'keisai_ymd', labelId: 'label_keisai_ymd', message: '掲載日を入力してください。' },
-        { id: 'enable_start_ymd', labelId: 'label_enable_start_ymd', message: '有効開始年月日を入力してください。' },
-        { id: 'enable_end_ymd', labelId: 'label_enable_end_ymd', message: '有効終了年月日を入力してください。' },
-        { id: 'information_naiyo', labelId: 'label_information_naiyo', message: 'お知らせ内容を入力してください。' },
-        { id: 'create_user_cd', labelId: 'label_create_user_cd', message: '登録者コードを入力してください。' },
-    ];
+        // 필수 입력란 및 메시지 설정
+        const fields = [{
+                id: 'information_title',
+                labelId: 'label_information_title',
+                message: 'お知らせタイトルを入力してください。'
+            },
+            {
+                id: 'information_kbn',
+                labelId: 'label_information_kbn',
+                message: 'お知らせ区分を選択してください。'
+            },
+            {
+                id: 'keisai_ymd',
+                labelId: 'label_keisai_ymd',
+                message: '掲載日を入力してください。'
+            },
+            {
+                id: 'enable_start_ymd',
+                labelId: 'label_enable_start_ymd',
+                message: '有効開始年月日を入力してください。'
+            },
+            {
+                id: 'enable_end_ymd',
+                labelId: 'label_enable_end_ymd',
+                message: '有効終了年月日を入力してください。'
+            },
+            {
+                id: 'information_naiyo',
+                labelId: 'label_information_naiyo',
+                message: 'お知らせ内容を入力してください。'
+            },
+            {
+                id: 'create_user_cd',
+                labelId: 'label_create_user_cd',
+                message: '登録者コードを入力してください。'
+            },
+        ];
 
-    let valid = true;
+        let valid = true;
 
-    // 모든 에러 메시지 초기화
-    document.querySelectorAll('.error-message').forEach(errorMsg => errorMsg.remove());
+        // 모든 에러 메시지 초기화
+        document.querySelectorAll('.error-message').forEach(errorMsg => errorMsg.remove());
 
-    fields.forEach(field => {
-        const input = document.getElementById(field.id);
-        const label = document.getElementById(field.labelId);
+        fields.forEach(field => {
+            const input = document.getElementById(field.id);
+            const label = document.getElementById(field.labelId);
 
-        if (!input.value) {
+            if (!input.value) {
+                valid = false;
+
+                // 에러 메시지를 라벨 옆에 추가
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'error-message';
+                errorMessage.style.color = 'red';
+                errorMessage.style.marginLeft = '10px'; // 라벨과 메시지 간 간격 추가
+                errorMessage.textContent = field.message;
+
+                // 라벨 옆에 에러 메시지 삽입
+                label.insertAdjacentElement('afterend', errorMessage);
+            }
+
+            // 타이틀이 100자를 초과하는 경우 처리
+            if (field.id === 'information_title' && input.value.length > 100) {
+                valid = false;
+
+                // 에러 메시지를 라벨 옆에 추가
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'error-message';
+                errorMessage.style.color = 'red';
+                errorMessage.style.marginLeft = '10px'; // 라벨과 메시지 간 간격 추가
+                errorMessage.textContent = 'タイトルは100文字以内で入力してください。';
+
+                // 라벨 옆에 에러 메시지 삽입
+                label.insertAdjacentElement('afterend', errorMessage);
+            }
+
+            // 등록자코드가 40자를 초과하는 경우 처리
+            if (field.id === 'create_user_cd' && input.value.length > 40) {
+                valid = false;
+
+                // 에러 메시지를 라벨 옆에 추가
+                const errorMessage = document.createElement('span');
+                errorMessage.className = 'error-message';
+                errorMessage.style.color = 'red';
+                errorMessage.style.marginLeft = '10px'; // 라벨과 메시지 간 간격 추가
+                errorMessage.textContent = '登録者コードは40文字以内で入力してください。';
+
+                // 라벨 옆에 에러 메시지 삽입
+                label.insertAdjacentElement('afterend', errorMessage);
+            }
+        });
+
+        // 유효개시일과 유효종료일 비교
+        const startDate = document.getElementById('enable_start_ymd').value;
+        const endDate = document.getElementById('enable_end_ymd').value;
+        const endLabel = document.getElementById('label_enable_end_ymd');
+
+        if (startDate && endDate && startDate > endDate) {
             valid = false;
 
-            // 에러 메시지를 라벨 옆에 추가
+            // 에러 메시지를 유효종료일 라벨 옆에 추가
             const errorMessage = document.createElement('span');
             errorMessage.className = 'error-message';
             errorMessage.style.color = 'red';
-            errorMessage.style.marginLeft = '10px'; // 라벨과 메시지 간 간격 추가
-            errorMessage.textContent = field.message;
+            errorMessage.style.marginLeft = '10px';
+            errorMessage.textContent = '有効開始年月日は有効終了年月日より前の日付を指定してください。';
 
-            // 라벨 옆에 에러 메시지 삽입
-            label.insertAdjacentElement('afterend', errorMessage);
+            endLabel.insertAdjacentElement('afterend', errorMessage);
         }
-    });
 
-    // 유효개시일과 유효종료일 비교
-    const startDate = document.getElementById('enable_start_ymd').value;
-    const endDate = document.getElementById('enable_end_ymd').value;
-    const endLabel = document.getElementById('label_enable_end_ymd');
-
-    if (startDate && endDate && startDate > endDate) {
-        valid = false;
-
-        // 에러 메시지를 유효종료일 라벨 옆에 추가
-        const errorMessage = document.createElement('span');
-        errorMessage.className = 'error-message';
-        errorMessage.style.color = 'red';
-        errorMessage.style.marginLeft = '10px';
-        errorMessage.textContent = '有効開始年月日は有効終了年月日より前の日付を指定してください。';
-
-        endLabel.insertAdjacentElement('afterend', errorMessage);
-    }
-
-    if (!valid) {
-        return; // 유효성 검사를 통과하지 못하면 서버 요청 중단
-    }
+        if (!valid) {
+            return; // 유효성 검사를 통과하지 못하면 서버 요청 중단
+        }
         // createForm 폼에서 데이터를 가져와 FormData 객체 생성
         const formElement = document.getElementById('createForm');
         const formData = new FormData(formElement);
