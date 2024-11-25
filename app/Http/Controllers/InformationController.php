@@ -50,8 +50,8 @@ class InformationController extends Controller
                 $query->whereDate('enable_end_ymd', '<=', $search_enable_end_ymd);
             }
         }
-        // 페이징 처리: 페이지 당 3개씩
-        $informations = $query->paginate(3);
+        // 페이징 처리: 페이지 당 5개씩
+        $informations = $query->paginate(5);
 
         // 뷰로 데이터 전달 (검색어와 구분도 함께 전달)
         return view('information.index', compact('informations', 'search_title', 'search_kbn', 'search_keisai_ymd', 'search_enable_start_ymd', 'search_enable_end_ymd'));
@@ -129,6 +129,7 @@ class InformationController extends Controller
             'enable_end_ymd' => $request->input('enable_end_ymd'),
             'information_naiyo' => $request->input('information_naiyo'),
             'create_user_cd' => $request->input('create_user_cd'),
+            'update_user_cd' => $request->input('create_user_cd'),
             'update_time' => now(),  // update_time을 현재 시간으로 업데이트
         ]);
 

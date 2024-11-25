@@ -3,11 +3,19 @@
 @section('content')
 
 
-<form class="search-form" action="{{ route('information.index') }}" method="GET" style="margin-left: 60px; margin-right: 60px;">
-    <!-- 타이틀과 구분을 같은 줄에 배치 -->
+<!-- 오류 메시지를 타이틀 위에 배치 -->
+<div id="title-error-message" class="error-message" style="display: none;">
+    お知らせタイトルは100文字以内で入力してください。
+</div>
+<div id="date-error-message" class="error-message" style="display: none;">
+    有効開始年月日は有効終了年月日より前の日付を指定してください。
+</div>
+<form class="search-form" action="{{ route('information.index') }}" method="GET" style="margin-left: 60px; margin-right: 60px;" onsubmit="return validateForm()">
+
+<!-- 타이틀과 구분을 같은 줄에 배치 -->
     <div class="search-row">
         <label for="search_title" class="search-label">お知らせタイトル</label>
-        <input type="text" name="search_title" placeholder="タイトル検索" value="{{ old('search_title', $search_title) }}">
+        <input type="text" name="search_title" id="search_title" placeholder="タイトル検索" value="{{ old('search_title', $search_title) }}">
 
         <label for="search_kbn" class="search-label">お知らせ区分</label>
         <select name="search_kbn">
@@ -16,6 +24,8 @@
             <option value="2" {{ old('search_kbn', $search_kbn) == '2' ? 'selected' : '' }}>情報</option>
         </select>
     </div>
+
+
 
     <!-- 게시일과 적용기간은 다른 줄에 배치 -->
     <div class="search-row">
@@ -289,6 +299,46 @@
     function closeUpdateModal() {
         location.reload()
     }
+
+    function validateForm() {
+    console.log("validateForm called"); // 호출 확인
+    const title = document.getElementById('search_title');
+    const startDate = document.getElementById('search_enable_start_ymd');
+    const endDate = document.getElementById('search_enable_end_ymd');
+    const dateErrorMessage = document.getElementById('date-error-message');
+    const titleErrorMessage = document.getElementById('title-error-message');
+
+    let isValid = true;
+
+    if (!title) {
+        console.error("Element with ID 'search_title' not found.");
+        return false;
+    }
+    if (!startDate || !endDate) {
+        console.error("Start or End Date element not found.");
+        return false;
+    }
+
+    const titleValue = title.value.trim();
+    console.log("Title:", titleValue);
+    console.log("Start Date:", startDate.value, "End Date:", endDate.value);
+
+    if (titleValue.length > 100) {
+        titleErrorMessage.style.display = 'block';
+        isValid = false;
+    } else {
+        titleErrorMessage.style.display = 'none';
+    }
+
+    if (startDate.value && endDate.value && new Date(startDate.value) > new Date(endDate.value)) {
+        dateErrorMessage.style.display = 'block';
+        isValid = false;
+    } else {
+        dateErrorMessage.style.display = 'none';
+    }
+
+    return isValid;
+}
 </script>
 
 <div class="table-container">
@@ -438,7 +488,7 @@
                     document.getElementById('enable_start_ymd_edit').value = formatDateString(data.enable_start_ymd);
                     document.getElementById('enable_end_ymd_edit').value = formatDateString(data.enable_end_ymd);
                     document.getElementById('information_naiyo_edit').value = data.information_naiyo;
-                    document.getElementById('update_user_cd_edit').value = data.update_user_cd;
+                    document.getElementById('update_user_cd_edit').value = data.create_user_cd;
 
                     // 모달 열기
                     openEditModal();
