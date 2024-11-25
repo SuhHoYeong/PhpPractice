@@ -761,6 +761,19 @@
     #updateModal .button:hover {
         background-color: #218838; /* 버튼 호버 색상 */
     }
+
+    .error-message {
+    color: #d9534f; /* 붉은 색상 */
+    background-color: #f9d6d5; /* 연한 붉은 배경색 */
+    border: 1px solid #d9534f; /* 경계선 */
+    border-radius: 5px; /* 부드러운 모서리 */
+    padding: 10px 15px; /* 내부 여백 */
+    margin: 10px 0; /* 위아래 여백 */
+    font-size: 14px; /* 글씨 크기 */
+    text-align: center; /* 가운데 정렬 */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 */
+    width: 100%; /* 전체 너비로 확장 */
+}
     </style>
 </head>
 
